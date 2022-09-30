@@ -1,5 +1,5 @@
-import React from "react"
 import { useFormik } from "formik"
+import { useKeycloak } from "@react-keycloak/web"
 
 export const Login = () => {
   const formik = useFormik({
@@ -7,9 +7,21 @@ export const Login = () => {
       email: "",
       password: "",
     },
-    onSubmit: () => {},
+    onSubmit: () => {
+      //success to go user dashboard
+      // TODO react-query
+      // TODO mobx
+    },
   })
-  console.log(formik.values)
+  const { keycloak, initialized } = useKeycloak()
+
+  if (!keycloak.authenticated) {
+    return (
+      <button type="button" className="text-blue-800" onClick={() => keycloak.login()}>
+        Login
+      </button>
+    )
+  }
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <h1 className="mb-14 text-3xl font-bold underline text-sky-400">Welcome to Family Quiz</h1>
@@ -43,6 +55,7 @@ export const Login = () => {
           </button>
         </div>
       </form>
+      <a href="signup">Signup</a>
     </div>
   )
 }
